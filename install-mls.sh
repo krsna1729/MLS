@@ -6,7 +6,7 @@ STREAM_NUM=25
 sudo dpkg-reconfigure tzdata
 
 #Install dependencies
-sudo apt-get update && sudo apt-get -y install build-essential libpcre3 libpcre3-dev libssl-dev git zip unzip curl php8.3-cli php8.3-mbstring php8.3-fpm php8.3-mysql php8.3-curl php8.3-gd php8.3-bcmath htop ffmpeg libzmq3-dev dpkg-dev nodejs yt-dlp
+sudo apt-get update && sudo apt-get -y install build-essential libpcre3 libpcre3-dev libssl-dev git zip unzip curl php8.3-cli php8.3-mbstring php8.3-fpm php8.3-mysql php8.3-curl php8.3-gd php8.3-bcmath htop ffmpeg libzmq3-dev nodejs yt-dlp
 
 #Install NGINX with RTMP module
 sudo mkdir ~/build && cd ~/build
@@ -80,18 +80,6 @@ sudo mkdir /usr/local/nginx/html/recording
 sudo chmod -R 777 /usr/local/nginx/html/recording
 
 cd /usr/local/nginx/html && sudo npm init -y && sudo npm install ws && cd ~
-
-#Build zmqsend from system ffmpeg source
-mkdir -p /tmp/zmq-build && cd /tmp/zmq-build
-apt-get source --download-only ffmpeg
-tar xf ffmpeg_*.orig.tar.* --wildcards '*/tools/zmqsend.c' --strip-components=2
-sudo gcc -o /usr/local/bin/zmqsend zmqsend.c -lzmq
-cd ~ && rm -rf /tmp/zmq-build
-
-#Symlink system ffmpeg into /usr/local/bin (scripts expect this path)
-sudo ln -sf /usr/bin/ffmpeg /usr/local/bin/ffmpeg
-sudo ln -sf /usr/bin/ffplay /usr/local/bin/ffplay
-sudo ln -sf /usr/bin/ffprobe /usr/local/bin/ffprobe
 
 #Shift Instagram-Live to generic folder
 sudo cp -R ~/InstagramLive-PHP /usr/local/nginx/scripts/ && sudo mv /usr/local/nginx/scripts/InstagramLive-PHP/ /usr/local/nginx/scripts/InstagramLive-PHP1/

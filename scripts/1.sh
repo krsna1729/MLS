@@ -10,7 +10,7 @@ dest=${dest//-+-+/ }                                                            
 resolution=$(cat /usr/local/nginx/scripts/config.txt | grep '__'$streamid'__'$1'__' | cut -d ' ' -f 3)   #Output resolution defined in destination config
 streamname=$(cat /usr/local/nginx/scripts/config.txt | grep '__'$streamid'__'$1'__' | cut -d ' ' -f 4)   #Output name defined in destination config
 
-ffmpegparam="/usr/local/bin/ffmpeg -nostdin -thread_queue_size 512 -i"
+ffmpegparam="/usr/bin/ffmpeg -nostdin -thread_queue_size 512 -i"
 
 #Create pipe interface between inputs and distribute
 inputparam="/usr/local/nginx/scripts/tmp/input_pipe"$id
@@ -85,7 +85,7 @@ esac
 case $1 in
 ####### Volume Modification ########
 volume)
-	echo 'Parsed_volume_1 volume '$2 | /usr/local/bin/zmqsend -b tcp://127.0.0.1:$audioport
+	echo 'Parsed_volume_1 volume '$2 | /usr/bin/zmqsend -b tcp://127.0.0.1:$audioport
 	sleep 0.5
 	;;
 
@@ -259,7 +259,7 @@ holding)
 		fi
 
 		while true; do #Loop the same file using stream_loop -1. genpts needed to continue PTS for each iteration
-			/usr/local/bin/ffmpeg -nostdin -re -fflags +genpts -stream_loop -1 -ss $2 -i /usr/local/nginx/scripts/images/$holdingvideo -c copy -vbsf h264_mp4toannexb -f mpegts pipe:1 >$inputparam
+			/usr/bin/ffmpeg -nostdin -re -fflags +genpts -stream_loop -1 -ss $2 -i /usr/local/nginx/scripts/images/$holdingvideo -c copy -vbsf h264_mp4toannexb -f mpegts pipe:1 >$inputparam
 			echo "Restarting ffmpeg..."
 			sleep .2
 		done
@@ -290,7 +290,7 @@ video)
 			exec screen -dm -S $screenname /bin/bash "$0" video $2
 		fi
 
-		/usr/local/bin/ffmpeg -nostdin -re -fflags +genpts -ss $2 -i /usr/local/nginx/scripts/images/$advideo -c copy -vbsf h264_mp4toannexb -f mpegts pipe:1 >$inputparam
+		/usr/bin/ffmpeg -nostdin -re -fflags +genpts -ss $2 -i /usr/local/nginx/scripts/images/$advideo -c copy -vbsf h264_mp4toannexb -f mpegts pipe:1 >$inputparam
 		echo "Video has finished playing. Exiting..."
 
 	else
@@ -353,7 +353,7 @@ failover)
 		fi
 
 		while true; do
-			/usr/local/bin/ffmpeg -nostdin -re -fflags +genpts -stream_loop -1 -i /usr/local/nginx/scripts/images/$failovervideo -c copy -vbsf h264_mp4toannexb -f mpegts pipe:1 >$inputparam
+			/usr/bin/ffmpeg -nostdin -re -fflags +genpts -stream_loop -1 -i /usr/local/nginx/scripts/images/$failovervideo -c copy -vbsf h264_mp4toannexb -f mpegts pipe:1 >$inputparam
 			echo "Restarting ffmpeg..."
 			sleep .2
 		done
