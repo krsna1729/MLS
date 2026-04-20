@@ -1,17 +1,17 @@
 #!/bin/bash
 # Deletes NGINX logs on restart to conserve space
-sudo rm /usr/local/nginx/logs/*.log
+sudo rm /var/log/nginx/*.log
 
 # Resets any lowerthirds applied previously to blank images
-sudo cp /usr/local/nginx/scripts/images/lowerthird/*lowerthird.png /usr/local/nginx/scripts/images
+sudo cp /etc/nginx/scripts/images/lowerthird/*lowerthird.png /etc/nginx/scripts/images
 
 # Replaces page titles in webpages to name of instance
-sudo sed -i "s|<title>.*</title>|<title>$(hostname) Control</title>|" /usr/local/nginx/html/index.html
-sudo sed -i "s|<title>.*</title>|<title>$(hostname) Settings</title>|" /usr/local/nginx/html/settings.html
-sudo sed -i "s|id="\""server-name"\"">.*</|id="\""server-name"\"">MLS: $(hostname)</|" /usr/local/nginx/html/index.html
-sudo sed -i "s|id="\""server-name"\"">.*</|id="\""server-name"\"">MLS: $(hostname)</|" /usr/local/nginx/html/settings.html
-sudo sed -i "s|<title>.*</title>|<title>$(hostname) Stats</title>|" /usr/local/nginx/html/stat.xsl
+sudo sed -i "s|<title>.*</title>|<title>$(hostname) Control</title>|" /var/www/html/index.html
+sudo sed -i "s|<title>.*</title>|<title>$(hostname) Settings</title>|" /var/www/html/settings.html
+sudo sed -i "s|id="\""server-name"\"">.*</|id="\""server-name"\"">MLS: $(hostname)</|" /var/www/html/index.html
+sudo sed -i "s|id="\""server-name"\"">.*</|id="\""server-name"\"">MLS: $(hostname)</|" /var/www/html/settings.html
+sudo sed -i "s|<title>.*</title>|<title>$(hostname) Stats</title>|" /var/www/html/stat.xsl
 
 # Restart NGINX
-sudo /usr/local/nginx/sbin/nginx -s stop
-sudo /usr/local/nginx/sbin/nginx
+sudo systemctl stop nginx
+sudo systemctl start nginx

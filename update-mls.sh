@@ -3,7 +3,7 @@
 STREAM_NUM=25
 
 # Production files folder
-cd /usr/local/nginx/
+cd /etc/nginx/
 
 # Keep configs
 cp ./scripts/config.txt ~/MLS/scripts/
@@ -11,8 +11,8 @@ cp ./scripts/config.txt ~/MLS/scripts/
 # Shift files to right locations
 sudo chgrp -R www-data ~/MLS
 sudo chmod g+rw -R ~/MLS
-sudo cp -R ~/MLS/html .
-sudo cp scripts/nginx.conf ./conf/
+sudo cp -R ~/MLS/html /var/www
+sudo cp scripts/nginx.conf ./
 sudo cp -R ~/MLS/scripts .
 sudo chmod +x -R ./scripts
 

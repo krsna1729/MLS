@@ -5,17 +5,17 @@ STREAM_NUM=25
 case $1 in
 # ===== Name Config =====
 nameconfig)
-	sudo sed -i "s|stream__name__.*|stream__name__ $2|" /usr/local/nginx/scripts/config.txt
+	sudo sed -i "s|stream__name__.*|stream__name__ $2|" /etc/nginx/scripts/config.txt
 	;;
 
 # ===== Add Destination =====
 destination)
-	sudo sed -i "s|stream$3__out$4__.*|stream$3__out$4__ $(echo $2 | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g') $5 $6|" /usr/local/nginx/scripts/config.txt
+	sudo sed -i "s|stream$3__out$4__.*|stream$3__out$4__ $(echo $2 | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g') $5 $6|" /etc/nginx/scripts/config.txt
 	;;
 
 # ===== Stream Config =====
 streamconfig)
-	sudo sed -i "s|stream$2__config__.*|stream$2__config__ $3 $4 $5|" /usr/local/nginx/scripts/config.txt
+	sudo sed -i "s|stream$2__config__.*|stream$2__config__ $3 $4 $5|" /etc/nginx/scripts/config.txt
 	;;
 
 # ===== Scheduling =====
@@ -26,19 +26,19 @@ addschedule)
 		holding)
 			(
 				sudo crontab -l
-				echo "$7 $8 $9 ${10} * sudo /bin/bash /usr/local/nginx/scripts/$2.sh on && sudo /bin/bash /usr/local/nginx/scripts/$2.sh $3 $6  # $5"
+				echo "$7 $8 $9 ${10} * sudo /bin/bash /etc/nginx/scripts/$2.sh on && sudo /bin/bash /etc/nginx/scripts/$2.sh $3 $6  # $5"
 			) 2>/dev/null | sort -u | sudo crontab -
 			;;
 		video)
 			(
 				sudo crontab -l
-				echo "$7 $8 $9 ${10} * sudo /bin/bash /usr/local/nginx/scripts/$2.sh on && sudo /bin/bash /usr/local/nginx/scripts/$2.sh $3 $6  # $5"
+				echo "$7 $8 $9 ${10} * sudo /bin/bash /etc/nginx/scripts/$2.sh on && sudo /bin/bash /etc/nginx/scripts/$2.sh $3 $6  # $5"
 			) 2>/dev/null | sort -u | sudo crontab -
 			;;
 		*)
 			(
 				sudo crontab -l
-				echo "$7 $8 $9 ${10} * sudo /bin/bash /usr/local/nginx/scripts/$2.sh $3  # $5"
+				echo "$7 $8 $9 ${10} * sudo /bin/bash /etc/nginx/scripts/$2.sh $3  # $5"
 			) 2>/dev/null | sort -u | sudo crontab -
 			;;
 		esac
@@ -49,19 +49,19 @@ addschedule)
 		holding)
 			(
 				sudo crontab -l
-				echo "$7 $8 $9 ${10} * sudo /bin/bash /usr/local/nginx/scripts/$2.sh off  # $5"
+				echo "$7 $8 $9 ${10} * sudo /bin/bash /etc/nginx/scripts/$2.sh off  # $5"
 			) 2>/dev/null | sort -u | sudo crontab -
 			;;
 		video)
 			(
 				sudo crontab -l
-				echo "$7 $8 $9 ${10} * sudo /bin/bash /usr/local/nginx/scripts/$2.sh off  # $5"
+				echo "$7 $8 $9 ${10} * sudo /bin/bash /etc/nginx/scripts/$2.sh off  # $5"
 			) 2>/dev/null | sort -u | sudo crontab -
 			;;
 		*)
 			(
 				sudo crontab -l
-				echo "$7 $8 $9 ${10} * sudo /bin/bash /usr/local/nginx/scripts/$2.sh $3 off  # $5"
+				echo "$7 $8 $9 ${10} * sudo /bin/bash /etc/nginx/scripts/$2.sh $3 off  # $5"
 			) 2>/dev/null | sort -u | sudo crontab -
 			;;
 		esac
@@ -86,7 +86,7 @@ audioconfig)
 	ch1=$5
 	ch2=$6
 	dest=$7
-	sudo sed -i "s|stream${stream_id}__audio__.*|stream${stream_id}__audio__ $remap_id $ch1 $ch2 $audio_type $dest|" /usr/local/nginx/scripts/config.txt
+	sudo sed -i "s|stream${stream_id}__audio__.*|stream${stream_id}__audio__ $remap_id $ch1 $ch2 $audio_type $dest|" /etc/nginx/scripts/config.txt
 
 	;;
 
@@ -99,39 +99,39 @@ audiopreset)
 	all_mono)
 		for ((i = 1; i <= 16; i++)); do
 			input_channel=$((i - 1))
-			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap1 c$input_channel c0 mono $dest|" /usr/local/nginx/scripts/config.txt
+			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap1 c$input_channel c0 mono $dest|" /etc/nginx/scripts/config.txt
 		done
 
 		for ((i = 17; i <= STREAM_NUM; i++)); do
 			input_channel=$((i - 17))
-			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap2 c$input_channel c0 mono $dest|" /usr/local/nginx/scripts/config.txt
+			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap2 c$input_channel c0 mono $dest|" /etc/nginx/scripts/config.txt
 		done
 		;;
 
 	one_stereo)
-		sudo sed -i "s|stream1__audio__.*|stream1__audio__ remap1 c0 c1 stereo $dest|" /usr/local/nginx/scripts/config.txt
+		sudo sed -i "s|stream1__audio__.*|stream1__audio__ remap1 c0 c1 stereo $dest|" /etc/nginx/scripts/config.txt
 		for ((i = 2; i <= 15; i++)); do
 			input_channel=$i
-			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap1 c$input_channel c0 mono $dest|" /usr/local/nginx/scripts/config.txt
+			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap1 c$input_channel c0 mono $dest|" /etc/nginx/scripts/config.txt
 		done
 
 		for ((i = 16; i <= STREAM_NUM; i++)); do
 			input_channel=$((i - 16))
-			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap2 c$input_channel c0 mono $dest|" /usr/local/nginx/scripts/config.txt
+			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap2 c$input_channel c0 mono $dest|" /etc/nginx/scripts/config.txt
 		done
 		;;
 
 	two_stereo)
-		sudo sed -i "s|stream1__audio__.*|stream1__audio__ remap1 c0 c1 stereo $dest|" /usr/local/nginx/scripts/config.txt
-		sudo sed -i "s|stream2__audio__.*|stream2__audio__ remap1 c2 c3 stereo $dest|" /usr/local/nginx/scripts/config.txt
+		sudo sed -i "s|stream1__audio__.*|stream1__audio__ remap1 c0 c1 stereo $dest|" /etc/nginx/scripts/config.txt
+		sudo sed -i "s|stream2__audio__.*|stream2__audio__ remap1 c2 c3 stereo $dest|" /etc/nginx/scripts/config.txt
 		for ((i = 3; i <= 14; i++)); do
 			input_channel=$((i + 1))
-			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap1 c$input_channel c0 mono $dest|" /usr/local/nginx/scripts/config.txt
+			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap1 c$input_channel c0 mono $dest|" /etc/nginx/scripts/config.txt
 		done
 
 		for ((i = 15; i <= STREAM_NUM; i++)); do
 			input_channel=$((i - 15))
-			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap2 c$input_channel c0 mono $dest|" /usr/local/nginx/scripts/config.txt
+			sudo sed -i "s|stream${i}__audio__.*|stream${i}__audio__ remap2 c$input_channel c0 mono $dest|" /etc/nginx/scripts/config.txt
 		done
 		;;
 
@@ -141,7 +141,7 @@ audiopreset)
 ##### UPLOAD FILE ##########
 
 uploadfile)
-	sudo wget -O $3$4 $2 && sudo chmod +x $3$4 && sudo mv $3$4 /usr/local/nginx/scripts/images
+	sudo wget -O $3$4 $2 && sudo chmod +x $3$4 && sudo mv $3$4 /etc/nginx/scripts/images
 	;;
 
 ##### UPLOAD LOWERTHIRD ##########
@@ -156,28 +156,28 @@ uploadlower)
 ##### END UPLOAD LOWERTHIRD - START STREAM LIST ##########
 
 streamlist)
-	startline=$(grep -n '***STREAM CONFIG***' /usr/local/nginx/scripts/config.txt | cut -d: -f 1)
-	endline=$(grep -n '***AUDIO CONFIG***' /usr/local/nginx/scripts/config.txt | cut -d: -f 1)
+	startline=$(grep -n '***STREAM CONFIG***' /etc/nginx/scripts/config.txt | cut -d: -f 1)
+	endline=$(grep -n '***AUDIO CONFIG***' /etc/nginx/scripts/config.txt | cut -d: -f 1)
 	rangeoflines=$startline','$endline'p'
-	sed -n $rangeoflines /usr/local/nginx/scripts/config.txt
+	sed -n $rangeoflines /etc/nginx/scripts/config.txt
 
 	;;
 
 ##### END STREAM LIST - START DESTINATION LIST ##########
 destlist)
-	startline=$(grep -n '***DESTINATION CONFIG***' /usr/local/nginx/scripts/config.txt | cut -d: -f 1)
-	endline=$(grep -n '***STREAM CONFIG***' /usr/local/nginx/scripts/config.txt | cut -d: -f 1)
+	startline=$(grep -n '***DESTINATION CONFIG***' /etc/nginx/scripts/config.txt | cut -d: -f 1)
+	endline=$(grep -n '***STREAM CONFIG***' /etc/nginx/scripts/config.txt | cut -d: -f 1)
 	rangeoflines=$startline','$endline'p'
-	sed -n $rangeoflines /usr/local/nginx/scripts/config.txt | grep -v "rtmp://unconfigured.blk source" | grep -v "instagram.*YourKey source" | grep -v "rtmp://localhost/recording/stream[0-9].* source"
+	sed -n $rangeoflines /etc/nginx/scripts/config.txt | grep -v "rtmp://unconfigured.blk source" | grep -v "instagram.*YourKey source" | grep -v "rtmp://localhost/recording/stream[0-9].* source"
 
 	;;
 
 ##### END DESTINATION LIST - START AUDIO LIST ##########
 audiolist)
-	startline=$(grep -n '***AUDIO CONFIG***' /usr/local/nginx/scripts/config.txt | cut -d: -f 1)
-	endline=$(grep -n '***NAME CONFIG***' /usr/local/nginx/scripts/config.txt | cut -d: -f 1)
+	startline=$(grep -n '***AUDIO CONFIG***' /etc/nginx/scripts/config.txt | cut -d: -f 1)
+	endline=$(grep -n '***NAME CONFIG***' /etc/nginx/scripts/config.txt | cut -d: -f 1)
 	rangeoflines=$startline','$endline'p'
-	sed -n $rangeoflines /usr/local/nginx/scripts/config.txt
+	sed -n $rangeoflines /etc/nginx/scripts/config.txt
 
 	;;
 
@@ -194,7 +194,7 @@ convertrecording)
 ##### END CONVERT RECORDING - START SRT ACCEPT ##########
 
 srtaccept)
-	LCK="/usr/local/nginx/scripts/tmp/srtaccept.LCK"
+	LCK="/etc/nginx/scripts/tmp/srtaccept.LCK"
 
 	exec 8>$LCK
 
@@ -213,7 +213,7 @@ srtaccept)
 
 		*)
 			while true; do
-				/usr/local/nginx/scripts/srt/build/srt-live-transmit "srt://:9000" "file://con" | /usr/bin/ffmpeg -re -i pipe:0 -map 0:0 -map 0:1 -vcodec libx264 -preset veryfast -profile:v high -acodec aac -f flv -strict -2 rtmp://127.0.0.1/main/stream1080
+				/etc/nginx/scripts/srt/build/srt-live-transmit "srt://:9000" "file://con" | /usr/bin/ffmpeg -re -i pipe:0 -map 0:0 -map 0:1 -vcodec libx264 -preset veryfast -profile:v high -acodec aac -f flv -strict -2 rtmp://127.0.0.1/main/stream1080
 				echo "Restarting SRT Accept..."
 				sleep .2
 			done
@@ -242,7 +242,7 @@ srtsend)
 	if [ -z "$STY" ]; then
 		exec screen -dm -S srtsend /bin/bash "$0" "$1"
 	fi
-	/usr/local/bin/ffmpeg -re -fflags +genpts -stream_loop -1 -i /usr/local/nginx/scripts/images/8video.mp4 -map 0:0 -map 0:1 -map 0:2 -map 0:3 -vcodec copy -acodec copy -f mpegts - | ~/ffmpeg_sources/srt/build/srt-live-transmit -v "file://con" "srt://139.59.46.142:9000"
+	/usr/local/bin/ffmpeg -re -fflags +genpts -stream_loop -1 -i /etc/nginx/scripts/images/8video.mp4 -map 0:0 -map 0:1 -map 0:2 -map 0:3 -vcodec copy -acodec copy -f mpegts - | ~/ffmpeg_sources/srt/build/srt-live-transmit -v "file://con" "srt://139.59.46.142:9000"
 
 	;;
 
@@ -254,7 +254,7 @@ remap)
 	ch_num=$4
 	remap_type=$5
 	onoff=$6
-	LCK="/usr/local/nginx/scripts/tmp/$remap_id$dest.LCK"
+	LCK="/etc/nginx/scripts/tmp/$remap_id$dest.LCK"
 
 	exec 8>$LCK
 
@@ -274,8 +274,8 @@ remap)
 		for ((i = 0; i < $stream_num; i++)); do
 			((j = j + 1))
 			for (( ; j <= $STREAM_NUM; j++)); do
-				mapping=$(cat /usr/local/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 5)
-				stream_remap_id=$(cat /usr/local/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 2)
+				mapping=$(cat /etc/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 5)
+				stream_remap_id=$(cat /etc/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 2)
 				if [ "$mapping" != "none" ] && [ "$remap_id" == "$stream_remap_id" ]; then
 					break
 				fi
@@ -286,9 +286,9 @@ remap)
 				break
 			fi
 
-			c0=$(cat /usr/local/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 3)
-			c1=$(cat /usr/local/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 4)
-			rtmpapp=$(cat /usr/local/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 6)
+			c0=$(cat /etc/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 3)
+			c1=$(cat /etc/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 4)
+			rtmpapp=$(cat /etc/nginx/scripts/config.txt | grep '__stream'$j'__audio__' | cut -d ' ' -f 6)
 
 			if [ $rtmpapp == "main_back" ]; then
 				rtmpapp=$dest
