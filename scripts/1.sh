@@ -85,7 +85,7 @@ esac
 case $1 in
 ####### Volume Modification ########
 volume)
-	echo 'Parsed_volume_1 volume '$2 | /usr/local/bin/tools/zmqsend -b tcp://127.0.0.1:$audioport
+	echo 'Parsed_volume_1 volume '$2 | /usr/local/bin/zmqsend -b tcp://127.0.0.1:$audioport
 	sleep 0.5
 	;;
 
