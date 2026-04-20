@@ -2,7 +2,7 @@ version: '3'
 
 services:
     nginx:
-        image: alfg/nginx-rtmp:v1.6.0
+        image: tiangolo/nginx-rtmp:latest
         container_name: 'nginx-mls'
         ports:
             - 8080:80
@@ -16,7 +16,7 @@ services:
             - internal
 
     php:
-        image: php:7.0-fpm-alpine
+        image: php:8.3-fpm-alpine
         container_name: 'php-mls'
         volumes:
             - .:/app

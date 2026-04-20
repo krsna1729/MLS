@@ -6,14 +6,14 @@ STREAM_NUM=25
 sudo dpkg-reconfigure tzdata
 
 #Install dependencies
-sudo apt-get update && sudo apt-get -y install build-essential checkinstall libpcre3 libpcre3-dev libssl-dev libx264-dev libx265-dev libnuma-dev libvpx-dev libfdk-aac-dev libmp3lame-dev libopus-dev libsdl2-dev libfreetype6-dev libass-dev libtool git zip unzip curl php7.0-cli php7.0-mbstring php7.0-fpm php7.0-mysql php7.0-curl php7.0-gd php7.0-bcmath autoconf automake cmake git-core pkg-config texinfo zlib1g-dev uuid-dev libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev nasm yasm htop ffmpeg youtube-dl
+sudo apt-get update && sudo apt-get -y install build-essential checkinstall libpcre3 libpcre3-dev libssl-dev libx264-dev libx265-dev libnuma-dev libvpx-dev libfdk-aac-dev libmp3lame-dev libopus-dev libsdl2-dev libfreetype6-dev libass-dev libtool git zip unzip curl php8.3-cli php8.3-mbstring php8.3-fpm php8.3-mysql php8.3-curl php8.3-gd php8.3-bcmath autoconf automake cmake git-core pkg-config texinfo zlib1g-dev uuid-dev libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev nasm yasm htop ffmpeg yt-dlp
 
 #Install NGINX with RTMP module
 sudo mkdir ~/build && cd ~/build
 sudo git clone git://github.com/arut/nginx-rtmp-module.git
-sudo wget http://nginx.org/download/nginx-1.13.12.tar.gz
-sudo tar xzf nginx-1.13.12.tar.gz
-cd nginx-1.13.12
+sudo wget http://nginx.org/download/nginx-1.26.2.tar.gz
+sudo tar xzf nginx-1.26.2.tar.gz
+cd nginx-1.26.2
 sudo ./configure --with-http_ssl_module --add-module=../nginx-rtmp-module
 echo "Hold on! NGINX is installing."
 sudo make -s
@@ -62,11 +62,11 @@ for ((i = 2; i <= ${STREAM_NUM}; i++)); do
 done
 
 sudo cp /usr/local/nginx/scripts/.htpasswd /usr/local/nginx/conf/
-sudo cp /etc/php/7.0/fpm/php.ini /etc/php/7.0/fpm/php.old
-sudo cp /usr/local/nginx/scripts/php.ini /etc/php/7.0/fpm/
+sudo cp /etc/php/8.3/fpm/php.ini /etc/php/8.3/fpm/php.old
+sudo cp /usr/local/nginx/scripts/php.ini /etc/php/8.3/fpm/
 sudo cp /usr/local/nginx/scripts/images/*lowerthird.png /usr/local/nginx/scripts/images/lowerthird
 
-sudo systemctl restart php7.0-fpm
+sudo systemctl restart php8.3-fpm
 
 sudo cp /usr/local/nginx/scripts/nginx.conf /usr/local/nginx/conf/
 sudo rm -R /usr/local/nginx/html
@@ -98,11 +98,11 @@ sudo chmod -R 777 /usr/local/nginx/html/hls
 sudo mkdir /usr/local/nginx/html/recording
 sudo chmod -R 777 /usr/local/nginx/html/recording
 
-cd ~ && curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+cd ~ && curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs && cd /usr/local/nginx/html && sudo npm init -y && sudo npm install ws && cd ~
 
 #Install FFMPEG Controller
-cd ~ && sudo wget https://github.com/zeromq/libzmq/releases/download/v4.2.2/zeromq-4.2.2.tar.gz && tar xvzf zeromq-4.2.2.tar.gz && cd zeromq-4.2.2
+cd ~ && sudo wget https://github.com/zeromq/libzmq/releases/download/v4.3.5/zeromq-4.3.5.tar.gz && tar xvzf zeromq-4.3.5.tar.gz && cd zeromq-4.3.5
 ./configure && sudo make install && sudo ldconfig
 
 #Install FFMPEG Components
